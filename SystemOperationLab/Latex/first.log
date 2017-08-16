@@ -1,0 +1,76 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdftex 2017.8.8)  15 AUG 2017 16:29
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**first.tex
+(./first.tex
+! Undefined control sequence.
+l.1 \documentclass
+                  {article}
+? 
+! Undefined control sequence.
+l.4 \usepackage
+               {calligra}
+? 
+! Undefined control sequence.
+l.5 \usepackage
+               [T1]{fontenc}
+? 
+! Undefined control sequence.
+l.7 \author
+           {Aditya Vashishtha}
+? 
+! Undefined control sequence.
+l.8 \title
+          {Welcome To \LaTeX}
+? 
+! Undefined control sequence.
+l.8 \title{Welcome To \LaTeX
+                            }
+? 
+! Undefined control sequence.
+l.9 \date
+         {\today}
+? 
+! Undefined control sequence.
+l.9 \date{\today
+                }
+? 
+! Undefined control sequence.
+l.10 \begin
+           {document}
+? 
+! Undefined control sequence.
+l.12 \calligra
+              
+? 
+! Undefined control sequence.
+l.13 \maketitle
+               
+? 
+! Undefined control sequence.
+l.14 \normalfont
+                
+? 
+! Undefined control sequence.
+l.17 \rm again great \LaTeX
+                           
+? 
+! Undefined control sequence.
+l.18 \normalfont
+                
+? 
+! Undefined control sequence.
+l.19 \fontfamily
+                {phv} {This is what we are here for.}
+? 
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] )</usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on first.pdf (1 page, 26497 bytes).
+PDF statistics:
+ 16 PDF objects out of 1000 (max. 8388607)
+ 10 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+
