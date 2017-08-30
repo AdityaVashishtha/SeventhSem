@@ -22,22 +22,22 @@ public class Puzzle{
         return fCost;
     }
 
-    public static Block bestNode(Queue<Block> open,Block finalState){
+    public static Block bestNode(LinkedHashSet<Block> open,Block finalState){
         int min=100000;
         Block ref = null;
         Iterator<Block> it = open.iterator();
         while(it.hasNext()) {
             Block temp = it.next();
-            int x = calculateFValue(temp, finalState);            
+            int x = temp.cost;            
             if(min > x ){
                 ref = temp;
-                min =x;
+                min =x;                
             }
         }
         return ref;
     }
 
-    public static boolean checkElement(Queue<Block> q,Block b) {
+    public static boolean checkElement(LinkedHashSet<Block> q,Block b) {
         Iterator<Block> it = q.iterator();
         while(it.hasNext()) {
             if(it.next().equals(b))
@@ -47,8 +47,8 @@ public class Puzzle{
     }
 
     public static void solveAStar(Block initialState,Block finalState) {
-        Queue<Block> open = new LinkedList<Block>();  
-        Queue<Block> closed = new LinkedList<Block>();  
+        LinkedHashSet<Block> open = new LinkedHashSet<Block>();  
+        LinkedHashSet<Block> closed = new LinkedHashSet<Block>();  
         initialState.cost = calculateFValue(initialState, finalState);
         open.add(initialState);        
         
@@ -57,7 +57,7 @@ public class Puzzle{
             curNode.cost = calculateFValue(curNode, finalState);
             closed.add(curNode);
             open.remove(curNode);            
-            if(curNode.cost == 0) {
+            if(curNode.cost == 0) {                
                 curNode.printPath();
                 //TOOD Print path
                 return;
@@ -69,8 +69,9 @@ public class Puzzle{
                     case 0: Block upChild = new Block(curNode.block,curNode.dimension);                    
                             if(upChild.blankUp()) {
                                 upChild.parent = curNode;
-
-                                // printf("-----UP-----"+upChild+" Parent :: "+curNode);
+                                upChild.depth = curNode.depth + 1;
+                                
+                                // printf("-----UP-----"+upChild+" Parent :: "+curNode+" Depth "+upChild.depth);
                                 // upChild.printBlock();
                                 // curNode.printBlock();
                                 // printf("----------");
@@ -84,26 +85,27 @@ public class Puzzle{
                                 // check open set
                                 if(! checkElement(open, upChild)) {
                                     printf("Not Inside Open");
-                                    upChild.cost = calculateFValue(upChild, finalState) + curNode.depth;
+                                    upChild.cost = calculateFValue(upChild, finalState) + upChild.depth;
                                     upChild.depth = curNode.depth + 1;
                                     open.add(upChild);
                                 }
                                 // put in open set
-                                int tempDepth = curNode.depth + 1;
-                                if(tempDepth >= upChild.depth )
+                                int tempDepth = calculateFValue(upChild, finalState) + upChild.depth;
+                                if(tempDepth >= upChild.cost )
                                     continue;  
                                 
-                                upChild.depth = tempDepth;
+                                upChild.depth = curNode.depth + 1;
                                 upChild.parent = curNode;
-                                upChild.cost = calculateFValue(upChild, finalState) + curNode.depth;
+                                upChild.cost = calculateFValue(upChild, finalState) + upChild.depth;
                             }
                             //up;
                     break;
                     case 1: Block downChild = new Block(curNode.block,curNode.dimension);                    
                             if(downChild.blankDown()) {
                                 downChild.parent = curNode;
-
-                                // printf("-----Down-----"+downChild);
+                                downChild.depth = curNode.depth + 1;
+                                
+                                // printf("-----Down-----"+downChild+" Depth "+downChild.depth);
                                 // downChild.printBlock();
                                 // curNode.printBlock();
                                 // printf("----------");
@@ -116,25 +118,26 @@ public class Puzzle{
                                 // check open set
                                 if(! checkElement(open, downChild)) {
                                     printf("Not Inside Open");
-                                    downChild.cost = calculateFValue(downChild, finalState) + curNode.depth;
+                                    downChild.cost = calculateFValue(downChild, finalState) + downChild.depth;
                                     downChild.depth = curNode.depth + 1;
                                     open.add(downChild);
                                 }
                                 // put in open set
-                                int tempDepth = curNode.depth + 1;
-                                if(tempDepth >= downChild.depth )
+                                int tempDepth = calculateFValue(downChild, finalState) + downChild.depth;
+                                if(tempDepth >= downChild.cost )
                                     continue;  
                                 
-                                downChild.depth = tempDepth;
+                                downChild.depth = curNode.depth + 1;
                                 downChild.parent = curNode;
-                                downChild.cost = calculateFValue(downChild, finalState) + curNode.depth;
+                                downChild.cost = calculateFValue(downChild, finalState) + downChild.depth;
                             }
                     break;
                     case 2: Block rChild = new Block(curNode.block,curNode.dimension);                
                         if(rChild.blankRight()) {
                             rChild.parent = curNode;               
-
-                            // printf("-----Right-----"+rChild);
+                            rChild.depth = curNode.depth + 1;
+                            
+                            // printf("-----Right-----"+rChild+" Depth "+rChild.depth);
                             // rChild.printBlock();
                             // curNode.printBlock();
                             // printf("----------");             
@@ -147,25 +150,26 @@ public class Puzzle{
                             // check open set
                             if(! checkElement(open, rChild)) {
                                 printf("Not Inside Open");
-                                rChild.cost = calculateFValue(rChild, finalState) + curNode.depth;
+                                rChild.cost = calculateFValue(rChild, finalState) + rChild.depth;
                                 rChild.depth = curNode.depth + 1;
                                 open.add(rChild);
                             }
                             // put in open set
-                            int tempDepth = curNode.depth + 1;
-                            if(tempDepth >= rChild.depth )
+                            int tempDepth = calculateFValue(rChild, finalState) + rChild.depth;
+                            if(tempDepth >= rChild.cost )
                                 continue;  
                             
-                            rChild.depth = tempDepth;
+                            rChild.depth = curNode.depth + 1;
                             rChild.parent = curNode;
-                            rChild.cost = calculateFValue(rChild, finalState) + curNode.depth;
+                            rChild.cost = calculateFValue(rChild, finalState) + rChild.depth;
                         }
                     break;
                     case 3: Block lChild = new Block(curNode.block,curNode.dimension);                            
                             if(lChild.blankLeft()) {
                                 lChild.parent = curNode;              
-                                
-                                // printf("-----Left-----"+lChild);
+                                lChild.depth = curNode.depth + 1;
+
+                                // printf("-----Left-----"+lChild+" Depth "+lChild.depth);
                                 // lChild.printBlock();
                                 // lChild.parent.printBlock();
                                 // printf("----------");                  
@@ -178,18 +182,18 @@ public class Puzzle{
                                 // check open set
                                 if(! checkElement(open, lChild)) {
                                     printf("Not Inside Open");
-                                    lChild.cost = calculateFValue(lChild, finalState) + curNode.depth;
+                                    lChild.cost = calculateFValue(lChild, finalState) + lChild.depth;
                                     lChild.depth = curNode.depth + 1;
                                     open.add(lChild);
                                 }
                                 // put in open set
-                                int tempDepth = curNode.depth + 1;
-                                if(tempDepth >= lChild.depth )
+                                int tempDepth = calculateFValue(lChild, finalState) + lChild.depth;
+                                if(tempDepth >= lChild.cost )
                                     continue;  
                                 
-                                lChild.depth = tempDepth;
+                                lChild.depth = curNode.depth + 1;
                                 lChild.parent = curNode;
-                                lChild.cost = calculateFValue(lChild, finalState) + curNode.depth;
+                                lChild.cost = calculateFValue(lChild, finalState) + lChild.depth ;
                             }
                     break;
                 }
@@ -254,12 +258,11 @@ class Block {
     int dimension;
     int cost;
     int blank_x, blank_y;
-    int depth=0;
+    int depth;
     int block[][] = new int[Puzzle.BLOCK_SIZE][Puzzle.BLOCK_SIZE];
     Block parent = null;
 
-    Block(int block[][],int n) {
-        this.depth = 1000000;        
+    Block(int block[][],int n) {        
         this.dimension = n;
         for(int i=0;i<n;i++)
         for(int j=0;j<n;j++) {
@@ -267,6 +270,20 @@ class Block {
         }
 
         this.setXY();
+    }
+
+    public boolean equals(Object y) {      // does this board equal y?
+        if (y == this)  return true;
+        if (y == null)  return false;
+        if (y.getClass() != this.getClass()) return false;
+
+        Block that = (Block) y;
+        for(int i=0;i<dimension;i++)
+        for(int j=0;j<dimension;j++) {
+            if(this.block[i][j] != that.block[i][j])
+                return false;
+        }
+        return true;
     }
 
     public void printPath(){
@@ -282,7 +299,10 @@ class Block {
     public void printBlock(){
         for(int x[]:block){
             for(int elem: x) {
-                System.out.print(elem + " ");
+                if(elem == 0)
+                    System.out.print(" _ ");
+                else
+                    System.out.print(elem + " ");
             }            
             System.out.println();
         }
