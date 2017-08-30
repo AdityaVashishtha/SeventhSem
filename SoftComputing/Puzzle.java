@@ -54,12 +54,11 @@ public class Puzzle{
         
         while(!open.isEmpty()) {
             Block curNode = bestNode(open,finalState);
+            curNode.cost = calculateFValue(curNode, finalState);
             closed.add(curNode);
-            open.remove(curNode);
-            printf("----------");
-            curNode.printBlock();
-            printf("----------");
+            open.remove(curNode);            
             if(curNode.cost == 0) {
+                curNode.printPath();
                 //TOOD Print path
                 return;
             }     
@@ -67,13 +66,24 @@ public class Puzzle{
             for (int i = 0; i < 4; i++)
             {
                 switch(i) {
-                    case 0: Block upChild = curNode;
-                            if(upChild.blankUp(curNode)) {
+                    case 0: Block upChild = new Block(curNode.block,curNode.dimension);                    
+                            if(upChild.blankUp()) {
+                                upChild.parent = curNode;
+
+                                // printf("-----UP-----"+upChild+" Parent :: "+curNode);
+                                // upChild.printBlock();
+                                // curNode.printBlock();
+                                // printf("----------");
+
+
                                 // check closed set
-                                if(! checkElement(closed, upChild))
-                                    continue;
+                                if(checkElement(closed, upChild)) {
+                                    printf("Inside Closed");
+                                    continue;                                    
+                                }
                                 // check open set
                                 if(! checkElement(open, upChild)) {
+                                    printf("Not Inside Open");
                                     upChild.cost = calculateFValue(upChild, finalState) + curNode.depth;
                                     upChild.depth = curNode.depth + 1;
                                     open.add(upChild);
@@ -89,13 +99,23 @@ public class Puzzle{
                             }
                             //up;
                     break;
-                    case 1: Block downChild = curNode;
-                            if(downChild.blankUp(curNode)) {
+                    case 1: Block downChild = new Block(curNode.block,curNode.dimension);                    
+                            if(downChild.blankDown()) {
+                                downChild.parent = curNode;
+
+                                // printf("-----Down-----"+downChild);
+                                // downChild.printBlock();
+                                // curNode.printBlock();
+                                // printf("----------");
+
                                 // check closed set
-                                if(! checkElement(closed, downChild))
-                                    continue;
+                                if(checkElement(closed, downChild)) {
+                                    printf("Inside Closed");
+                                    continue;                                    
+                                }
                                 // check open set
                                 if(! checkElement(open, downChild)) {
+                                    printf("Not Inside Open");
                                     downChild.cost = calculateFValue(downChild, finalState) + curNode.depth;
                                     downChild.depth = curNode.depth + 1;
                                     open.add(downChild);
@@ -110,13 +130,23 @@ public class Puzzle{
                                 downChild.cost = calculateFValue(downChild, finalState) + curNode.depth;
                             }
                     break;
-                    case 2: Block rChild = curNode;
-                        if(rChild.blankUp(curNode)) {
+                    case 2: Block rChild = new Block(curNode.block,curNode.dimension);                
+                        if(rChild.blankRight()) {
+                            rChild.parent = curNode;               
+
+                            // printf("-----Right-----"+rChild);
+                            // rChild.printBlock();
+                            // curNode.printBlock();
+                            // printf("----------");             
+
                             // check closed set
-                            if(! checkElement(closed, rChild))
-                                continue;
+                            if(checkElement(closed, rChild)) {
+                                printf("Inside Closed");
+                                continue;                                
+                            }
                             // check open set
                             if(! checkElement(open, rChild)) {
+                                printf("Not Inside Open");
                                 rChild.cost = calculateFValue(rChild, finalState) + curNode.depth;
                                 rChild.depth = curNode.depth + 1;
                                 open.add(rChild);
@@ -131,13 +161,23 @@ public class Puzzle{
                             rChild.cost = calculateFValue(rChild, finalState) + curNode.depth;
                         }
                     break;
-                    case 3: Block lChild = curNode;
-                            if(lChild.blankUp(curNode)) {
+                    case 3: Block lChild = new Block(curNode.block,curNode.dimension);                            
+                            if(lChild.blankLeft()) {
+                                lChild.parent = curNode;              
+                                
+                                // printf("-----Left-----"+lChild);
+                                // lChild.printBlock();
+                                // lChild.parent.printBlock();
+                                // printf("----------");                  
+                                
                                 // check closed set
-                                if(! checkElement(closed, lChild))
-                                    continue;
+                                if(checkElement(closed, lChild)) {
+                                    printf("Inside Closed");
+                                    continue;                                    
+                                }
                                 // check open set
                                 if(! checkElement(open, lChild)) {
+                                    printf("Not Inside Open");
                                     lChild.cost = calculateFValue(lChild, finalState) + curNode.depth;
                                     lChild.depth = curNode.depth + 1;
                                     open.add(lChild);
@@ -168,7 +208,6 @@ public class Puzzle{
             }
         
         Block initialState = new Block(block,BLOCK_SIZE);            
-        initialState.setXY();
 
         System.out.println("Input Final State");
         for(int i=0;i<BLOCK_SIZE;i++)
@@ -177,15 +216,14 @@ public class Puzzle{
             }
         
         Block finalState = new Block(block,BLOCK_SIZE);            
-        finalState.setXY();
 
         // FOR PRINTING FINAL AND INITIAL
-        printf("");
-        initialState.printBlock();        
-        printf(initialState.blank_x+" "+initialState.blank_y);
-        printf("");
-        finalState.printBlock();        
-        printf(finalState.blank_x+" "+finalState.blank_y);
+        // printf("");
+        // initialState.printBlock();        
+        // printf(initialState.blank_x+" "+initialState.blank_y);
+        // printf("");
+        // finalState.printBlock();        
+        // printf(finalState.blank_x+" "+finalState.blank_y);
         // FOR PRINTING FINAL AND INITIAL
         printf("");
         solveAStar(initialState,finalState);
@@ -216,18 +254,31 @@ class Block {
     int dimension;
     int cost;
     int blank_x, blank_y;
-    int depth;
+    int depth=0;
     int block[][] = new int[Puzzle.BLOCK_SIZE][Puzzle.BLOCK_SIZE];
-    Block parent;
+    Block parent = null;
 
     Block(int block[][],int n) {
-        this.depth = 1000000;
+        this.depth = 1000000;        
         this.dimension = n;
         for(int i=0;i<n;i++)
         for(int j=0;j<n;j++) {
             this.block[i][j] = block[i][j];
         }
+
+        this.setXY();
     }
+
+    public void printPath(){
+        if(this.parent == null) {
+            return;                    
+        } else {
+            this.parent.printPath();               
+            this.printBlock();
+            Puzzle.printf("Printing Path "+ this.depth);        
+        }                                
+    }
+
     public void printBlock(){
         for(int x[]:block){
             for(int elem: x) {
@@ -249,49 +300,45 @@ class Block {
         }            
     }
 
-    public boolean blankLeft(Block p){
-        if((blank_x >= 0 && blank_x <= dimension-1) && ( blank_y > 0 &&  ( blank_y <= dimension-1)) ){
-            int temp = block[blank_x][blank_y-1];
-            block[blank_x][blank_y-1] = 0;
-            block[blank_x][blank_y] = temp;
-            blank_y = blank_y - 1;
-            parent = p;
+    public boolean blankLeft(){
+        if((this.blank_x >= 0 && this.blank_x <= this.dimension-1) && ( this.blank_y > 0 &&  ( this.blank_y <= this.dimension-1)) ){
+            int temp = this.block[this.blank_x][this.blank_y-1];
+            this.block[this.blank_x][this.blank_y-1] = 0;
+            this.block[this.blank_x][this.blank_y] = temp;
+            this.blank_y = this.blank_y - 1;
             return true;
         }
         return false;
     }
 
-    public boolean blankRight(Block p){
+    public boolean blankRight(){
         if((blank_x >= 0 && blank_x <= dimension-1) && ((blank_y >= 0) &&  ( blank_y < dimension-1))){
             int temp = block[blank_x][blank_y+1];
             block[blank_x][blank_y+1] = 0;
             block[blank_x][blank_y] = temp;
             blank_y = blank_y + 1;
-            parent = p;
             return true;
         }
         return false;
     }
 
-    public boolean blankDown(Block p){
+    public boolean blankDown(){
         if((blank_x >= 0 && blank_x < dimension-1) && ( blank_y >= 0 &&  ( blank_y <= dimension-1)) ){
             int temp = block[blank_x+1][blank_y];
             block[blank_x+1][blank_y] = 0;
             block[blank_x][blank_y] = temp;
             blank_x = blank_x + 1;
-            parent = p;
             return true;
         }
         return false;
     }
 
-    public boolean blankUp(Block p){
+    public boolean blankUp(){
         if((blank_x > 0 && blank_x <= dimension-1) && ( blank_y >= 0 &&  ( blank_y <= dimension-1)) ){
             int temp = block[blank_x-1][blank_y];
             block[blank_x-1][blank_y] = 0;
             block[blank_x][blank_y] = temp;
             blank_x = blank_x - 1;
-            parent = p;
             return true;
         }
         return false;
