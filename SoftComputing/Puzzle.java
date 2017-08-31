@@ -1,8 +1,5 @@
 import java.util.*;
 
-
-
-
 //class to store main function
 public class Puzzle{
     public final static int BLOCK_SIZE = 3;
