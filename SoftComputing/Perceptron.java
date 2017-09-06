@@ -7,14 +7,14 @@ public class Perceptron {
 
 
     public static void main(String args[]){
-        int [] inputX1 = {0,1,0,1,0};
-        int [] inputX2 = {0,0,1,1,0};
+        int [] inputX1 = {0,1,0,1};
+        int [] inputX2 = {0,0,1,1};
 
         // Output as per gate
-        int []outputAnd = {0,0,0,1,0};
-        int []outputOr = {0,1,1,1,0};
-        int []outputNand = {1,1,1,0,1};
-        int []outputNor = {1,0,0,0,1};
+        int []outputAnd = {0,0,0,1};
+        int []outputOr = {0,1,1,1};
+        int []outputNand = {1,1,1,0};
+        int []outputNor = {1,0,0,0};
 
         w1 = new Random().nextDouble() + -1;
         w2 = new Random().nextDouble() + -1;
@@ -27,7 +27,7 @@ public class Perceptron {
             for(int j=0;j<inputX1.length;j++) {
                 int x1 = inputX1[j];
                 int x2 = inputX2[j];
-                int op = outputNor[j];
+                int op = outputNand[j];
                 double weightedSum = w1*x1 + w2*x2;
                 double totalSum = weightedSum + b ;
                 int y = (totalSum > 0 ) ? 1 : 0;
@@ -46,7 +46,7 @@ public class Perceptron {
         for(int j=0;j<inputX1.length;j++) {
             int x1 = inputX1[j];
             int x2 = inputX2[j];
-            int op = outputNor[j];
+            int op = outputNand[j];
             double weightedSum = w1*x1 + w2*x2;
             double totalSum = weightedSum + b ;
             int y = (totalSum > 0 ) ? 1 : 0;
