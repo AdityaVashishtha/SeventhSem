@@ -49,3 +49,10 @@ r=rand(1,5);
 disp(r);
 r(find(!floor(2*r))) = 0;
 disp(r);
+
+%Problem 8
+figure()
+sample=[0:0.01:2*pi];
+plot(sin(sample))
+hold on
+plot(cos(sample))
