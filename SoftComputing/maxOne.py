@@ -48,47 +48,47 @@ def rankPopulation(list):
                 list[i] = list[i+1]
                 list[i+1] = temp
 
-def nextGeneration(list):
-    print "###################CROSSOVER STARTED#######################"    
-    rankPopulation(list)    
-    for i in range(0,40):
-        x_i = randint(5,49)
-        y_i = randint(5,49)
+def nextGeneration(list):    
+    rankPopulation(list)        # Crossover Start
+    for i in range(0,20):
+        x_i = randint(0,20)
+        y_i = randint(0,20)
         x,y=crossOver(list[x_i],list[y_i])
         # print list[x_i], setScore(list[x_i])
         # print list[y_i], setScore(list[y_i])
         # print x, setScore(x)
         # print y, setScore(y)
         list.append(x)
-        list.append(y)
-    print "###################CROSSOVER DONE#######################"    
+        list.append(y)          # Crossover End
     rankPopulation(list)
-    del list[50:]
-    print len(list)
-    print "###################MUTATION STARTED#######################"    
-    for i in range(0,5):
-        x_i = randint(0,49)
+    del list[50:]    
+    for i in range(0,5):        # Mutation Start
+        x_i = randint(5,49)
         x = mutation(list[x_i])
-        list[x_i]=x
-    print "###################MUTATION DONE#######################"
+        list[x_i]=x             # Mutation End
+
 
 
 if __name__ == "__main__":
     x = getInitialPopulation()    
     rankPopulation(x)
+    print "Initial top 5 results in Population"
+    count=1
     for i in x:
-        print i, setScore(i)
-    print "###################GENERATION STARTED#######################"
+        count += 1
+        print i, '  score:' ,setScore(i)
+        if(count>5):
+            break 
     # print(x[0],x[2])
     # c,d = crossOver(x[0],x[2])
     # m = mutation(x[0])
-    # print c,setScore(c)
-    # print d,setScore(d)
-    # print m,setScore(m)
-    for i in range(0,30):
-        nextGeneration(x)
-    print "###################GENERATION END#######################"
+    for i in range(0,20):
+        nextGeneration(x)    
     rankPopulation(x)
+    count = 1
+    print "Final top 5 results in Population"
     for i in x:
-        print i, setScore(i)
-    print len(x)
+        count += 1
+        print i, '  score:' ,setScore(i)
+        if(count>5):
+            break    
