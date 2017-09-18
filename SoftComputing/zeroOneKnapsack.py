@@ -65,7 +65,7 @@ def rankPopulation(list,items,MAX_WT):
                 list[i] = list[i+1]
                 list[i+1] = temp
 
-def nextGeneration(list,items,MAX_WT):
+def nextGeneration(list,items,MAX_WT):    
     rankPopulation(list,items,MAX_WT)    
     for i in range(0,7):
         x_i = randint(4,7)
@@ -92,6 +92,9 @@ if __name__ == "__main__":
     CROSSOVER_CHROMOSOME_SIZE = CHROMOSOME_SIZE/2
     population = getInitialPopulation()
     rankPopulation(population,items,MAX_WT)
+    print 'Weight\tPrice'
+    for item in items:
+        print item[0],'\t',item[1]
     count = 1
     print "Initial top 5 Item Values"
     for i in population:
